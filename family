@@ -1,0 +1,53 @@
+papa_de(hombre(abraham),[hombre(homero),hombre(herbert)]).
+
+papa_de(hombre(clancy),[mujer(marge),mujer(patty),mujer(selma)]).
+
+papa_de(hombre(homero),[hombre(bart),mujer(lisa),mujer(maggie)]).
+
+mama_de(mujer(mona),[hombre(homero)]).
+
+mama_de(mujer(jacqueline),[mujer(marge),mujer(patty),mujer(selma)]).
+
+mama_de(mujer(marge),[hombre(bart),mujer(lisa),mujer(maggie)]).
+
+mama_de(mujer(selma),[mujer(ling)]).
+
+
+son_esposos(Padre, Madre) :-
+    papa_de(hombre(Padre), HijosPadre),
+    mama_de(mujer(Madre), HijosMadre),
+    member(Hijo, HijosPadre),
+    member(Hijo, HijosMadre).
+
+
+abuelo_de(Abuelo, Nieto) :-
+    papa_de(hombre(Abuelo), Hijos),
+    member(Hijo, Hijos),
+    (papa_de(Hijo, Nietos); mama_de(Hijo, Nietos)),
+    member(Nieto, Nietos).
+
+
+abuela_de(Abuela, Nieto) :-
+    mama_de(mujer(Abuela), Hijos),
+    member(Hijo, Hijos),
+    (papa_de(Hijo, Nietos); mama_de(Hijo, Nietos)),
+    member(Nieto, Nietos).
+
+
+hermano_de(Hermano1, Hermano2) :-
+    (papa_de(, Hijos); mama_de(, Hijos)),
+    member(Hermano1, Hijos),
+    member(Hermano2, Hijos).
+
+
+primo_de(Primo1, Primo2) :-
+    (papa_de(Padre1, Hijos1); mama_de(Padre1, Hijos1)),
+    (papa_de(Padre2, Hijos2); mama_de(Padre2, Hijos2)),
+    member(Primo1, Hijos1),
+    member(Primo2, Hijos2),
+    hermano_de(Padre1, Padre2).
+
+tio_de(Tio, Sobrino) :-
+    (hermano_de(hombre(Tio), Padre); hermano_de(mujer(Tio), Padre)),
+    (papa_de(Padre, Hijos); mama_de(Padre, Hijos)),
+    member(Sobrino, Hijos).
